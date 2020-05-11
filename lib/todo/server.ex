@@ -2,7 +2,7 @@ defmodule Todo.Server do
   use GenServer
 
   def start do
-    GenServer.start(Todo.Server, nil)
+    GenServer.start(__MODULE__, nil)
   end
 
   def add_entry(todo_server, new_entry) do
