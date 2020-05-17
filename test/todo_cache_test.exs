@@ -17,4 +17,22 @@ defmodule TodoCacheTest do
 
     assert [%{date: ~D[2018-12-19], title: "Dentist"}] = entries
   end
+
+  test "persistence" do
+    {:ok, cache} = Todo.Cache.start()
+
+    john = Todo.Cache.server_process(cache, "john")
+    Todo.Server.add_entry(john, %{date: ~D[2018-12-20], title: "Shopping"})
+    assert 1 == length(Todo.Server.entries(john, ~D[2018-12-20]))
+
+    GenServer.stop(cache)
+    {:ok, cache} = Todo.Cache.start()
+
+    entries =
+      cache
+      |> Todo.Cache.server_process("john")
+      |> Todo.Server.entries(~D[2018-12-20])
+
+    assert [%{date: ~D[2018-12-20], title: "Shopping"}] = entries
+  end
 end
