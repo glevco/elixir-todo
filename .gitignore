@@ -24,3 +24,6 @@ todo-*.tar
 
 # Elixir LS
 .elixir_ls
+
+# Database
+/persist
